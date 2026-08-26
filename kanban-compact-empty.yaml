@@ -1,0 +1,72 @@
+name: kanban-compact-empty
+label: Hermes Teal (Large) — Compact Empty Kanban
+description: Keeps the spacious Hermes Teal Dashboard while compacting Kanban columns with no tasks.
+
+# Mirrors the active built-in `default-large` theme so the only intentional
+# visual change is the Kanban layout below.
+palette:
+  background:
+    hex: "#041c1c"
+    alpha: 1.0
+  midground:
+    hex: "#ffe6cb"
+    alpha: 1.0
+  foreground:
+    hex: "#ffffff"
+    alpha: 0.0
+  warmGlow: "rgba(255, 189, 56, 0.35)"
+  noiseOpacity: 1.0
+
+typography:
+  fontSans: "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+  fontMono: "ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace"
+  baseSize: "18px"
+  lineHeight: "1.65"
+  letterSpacing: "0"
+
+layout:
+  radius: "0.5rem"
+  density: spacious
+
+layoutVariant: standard
+
+customCSS: |
+  /*
+   * Kanban proof of concept: cards retain a usable 280px minimum width,
+   * while columns containing the built-in empty-state element contract.
+   * :has() is supported by the Chromium engine used by Hermes Dashboard.
+   */
+  .hermes-kanban-column {
+    flex: 1 1 280px;
+    min-width: 280px;
+    transition: flex-basis 160ms ease, border-color 120ms ease, background-color 120ms ease;
+  }
+
+  /* A no-card status becomes a narrow full-height rail. */
+  .hermes-kanban-column:has(.hermes-kanban-empty) {
+    flex: 0 0 52px;
+    min-width: 52px;
+    min-height: calc(100vh - 220px);
+    padding: 0.5rem 0.25rem;
+  }
+
+  /* Keep the status and create-task action, but omit the empty helper. */
+  .hermes-kanban-column:has(.hermes-kanban-empty) .hermes-kanban-column-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.25rem 0;
+  }
+
+  .hermes-kanban-column:has(.hermes-kanban-empty) .hermes-kanban-column-label {
+    flex: 0 0 auto;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    white-space: nowrap;
+  }
+
+  .hermes-kanban-column:has(.hermes-kanban-empty) .hermes-kanban-column-count,
+  .hermes-kanban-column:has(.hermes-kanban-empty) .hermes-kanban-column-sub,
+  .hermes-kanban-column:has(.hermes-kanban-empty) .hermes-kanban-column-body {
+    display: none;
+  }
